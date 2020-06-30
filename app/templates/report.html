@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if posts %}
+        <div class="card bg-light border-secondary mb-3">
+            <div class="card-header text-center bg-secondary border-success text-white">
+                LISTADO DE REPORTES
+            </div>
+            <div class="card-body">
+                <p><strong>Curso: </strong><em>{{ courseName }}</em></p></h6>
+                <p><strong>ID: </strong><em>{{ courseID }}</em></p></h6>
+                <div class="table-responsive-sm">
+                    <table class="table table-sm table-hover">
+                        <thead class="thead-light">
+                            <th scope="col">ID REPORTE</th>
+                            <th scope="col">FECHA DE REPORTE</th>
+                            <th scope="col">HORA DE REPORTE</th>
+                        </thead>
+                        <tbody>
+                            {% for post in posts %}
+                                <tr>
+                                    <td>{{ post.id }}</td>
+                                    <td>{{ post.reportDate }}</td>
+                                    <td>{{ post.reportTime }}</td>
+                                    <td>
+                                        <button class="btn btn-outline-info">
+                                            Detalles
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                        <caption>
+                            Total reportes: {{ coursesTotal }}
+                        </caption>
+                    </table>
+                    <div class="d-flex justify-content-center">
+                        <form action="/index">
+                            <button class="btn btn-outline-dark btn-sm">
+                                Regresar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

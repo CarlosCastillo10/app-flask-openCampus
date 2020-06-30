@@ -1,45 +1,53 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <!--
     <nav class="navbar navbar-light bg-light justify-content-between">
         <a class="navbar-brand"></a>
-        <form class="form-inline">
-            <input class="form-control mr-sm-2" type="text" placeholder="nombre de curso" aria-label="Buscar">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
+        
+        <form action="" class="form-inline" method="post">
+            <input class="form-control mr-sm-2" type="text" name="courseName" placeholder="nombre de curso" aria-label="Buscar">
+            <input class="btn btn-outline-success my-2 my-sm-0" type="submit" value="Buscar">
         </form>
+    -->
     </nav>
     {% if posts %}
         <div class="card bg-light border-secondary mb-3">
             <div class="card-header text-center bg-secondary border-success text-white">
-                LISTADO DE REPORTES
+                LISTADO DE CURSOS
             </div>
             <div class="card-body">
-                <div class="table-responsive-sm">
-                    <table class="table table-sm table-hover">
-                        <thead class="thead-dark">
-                            <th scope="col">ID</th>
-                            <th scope="col">NOMBRE</th>
-                            <th scope="col">TOTAL REPORTES</th>
-                        </thead>
-                        <tbody>
-                            {% for post in posts %}
-                                <tr>
-                                    <th scope="row">{{ post.courseID }}</th>
-                                    <td>{{ post.courseName }}</td>
-                                    <td>{{ post.totalReports }}</td>
-                                    <td>
-                                        <button class="btn btn-outline-info">
-                                            Ver detalles
-                                        </button>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                        <caption>
-                            Total cursos: {{ coursesTotal }}
-                        </caption>
-                    </table>
-                </div>
+                <form action="/report" method="post">
+                    <div class="table-responsive-sm">
+                        <table class="table table-sm table-hover">
+                            <thead class="thead-light">
+                                <th scope="col">ID CURSO</th>
+                                <th scope="col">CURSO</th>
+                                <th scope="col">TOTAL REPORTES</th>
+                            </thead>
+                            <tbody>
+                                {% for post in posts %}
+                                    <form action="/report" method="post">
+                                        <tr>
+                                            <input type="hidden" name="courseID" value="{{ post.courseID }}"/>
+                                            <td>{{ post.courseID }}</td>
+                                            <td>{{ post.courseName }}</td>
+                                            <td>{{ post.totalReports }}</td>
+                                            <td>
+                                                <button class="btn btn-outline-info">
+                                                    Ver reportes
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </form>
+                                {% endfor %}
+                            </tbody>
+                            <caption>
+                                Total cursos: {{ coursesTotal }}
+                            </caption>
+                        </table>
+                    </div>
+                </form>
             </div>
         </div>
     {% endif %}

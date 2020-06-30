@@ -1,25 +1,40 @@
 import couchdb
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 app = Flask(__name__)
 
 couchdb_server = couchdb.Server('http://openCampus:openCampus@127.0.0.1:5984')
 db = couchdb_server['course-report']
 
-@app.route('/')
-@app.route('/index')
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
 def index():
+    
     # Listado de todos los documentos almacenados
     documents = [row.doc for row in db.view("_all_docs", include_docs=True)]
     
     # Obtener valores unicos 
     documents_unique = list({document['courseID']:document for document in documents}.values())
     posts = []
+
     for document in documents_unique:
         posts.append({'courseID': document['courseID'],'courseName':document['courseName'],
             'totalReports': len([row for row in db.find({'selector':{'courseID':document['courseID']}})])})
+    '''
+    # Para realizar procedimiento de busqueda
+    if request.method == 'POST':
+        for document in documents_unique:
+            if request.form['courseName'].lower() == document['courseName'].lower():
+                posts = document 
+    '''
+    return render_template('index.html', posts = posts, coursesTotal = len(posts))
+
+@app.route('/report', methods=['GET','POST'])
+def report():
+    posts = [row for row in db.find({'selector':{'courseID':request.form['courseID']}})]
     
-    return render_template('index.html', posts=posts, coursesTotal = len(posts))
+    return render_template('report.html', posts = posts, courseName = posts[0]['courseName'], 
+        courseID = posts[0]['courseID'], coursesTotal = len(posts))
 
 if __name__ == '__main__':
     # app.run(host='0.0.0.0') # en una direccion en especifico
-    app.run() # en el localhost (127.0.0.1)
+    app.run(debug=True) # en el localhost (127.0.0.1)
