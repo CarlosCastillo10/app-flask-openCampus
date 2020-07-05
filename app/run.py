@@ -32,8 +32,15 @@ def index():
 def report():
     posts = [row for row in db.find({'selector':{'courseID':request.form['courseID']}})]
     
-    return render_template('report.html', posts = posts, courseName = posts[0]['courseName'], 
-        courseID = posts[0]['courseID'], coursesTotal = len(posts))
+    return render_template('report.html', reports = posts, courseName = posts[0]['courseName'], 
+        courseID = posts[0]['courseID'])
+
+@app.route('/view_details/<report_id>', methods=['GET'])
+def view_details(report_id):
+    
+    report_detail = db.get(report_id)
+    
+    return render_template('view_details.html', report = report_detail)
 
 if __name__ == '__main__':
     # app.run(host='0.0.0.0') # en una direccion en especifico
