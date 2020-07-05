@@ -19,6 +19,7 @@ def index():
     for document in documents_unique:
         posts.append({'courseID': document['courseID'],'courseName':document['courseName'],
             'totalReports': len([row for row in db.find({'selector':{'courseID':document['courseID']}})])})
+    posts = sorted(posts, key=lambda post : post['courseName'])
     '''
     # Para realizar procedimiento de busqueda
     if request.method == 'POST':
@@ -30,7 +31,11 @@ def index():
 
 @app.route('/report', methods=['GET','POST'])
 def report():
+    
     posts = [row for row in db.find({'selector':{'courseID':request.form['courseID']}})]
+    posts = sorted(sorted(posts, key=lambda post : post['reportTime'], reverse = True), \
+        key=lambda post : post['reportDate'], reverse = True)
+    # posts = sorted(posts, key=lambda post : post['reportTime'], reverse = True)
     
     return render_template('report.html', reports = posts, courseName = posts[0]['courseName'], 
         courseID = posts[0]['courseID'])
