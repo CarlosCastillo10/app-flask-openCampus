@@ -44,12 +44,13 @@ def report():
 def view_details(report_id):
     
     # obtener el contenido de un reporte
-    report_detail = db.get(report_id)
+    # report_detail = db.get(report_id)
     '''
     report_detail = [eval(str(row.value).replace('[','').replace(']','')) \
         for row in db.view("reports/status", key=report_id)]
     '''
-    print(report_detail)
+    report_detail = [row for row in db.view("reports/status", key=report_id)]
+    # print(report_detail)
 
     return render_template('view_details.html', report = report_detail)
 
