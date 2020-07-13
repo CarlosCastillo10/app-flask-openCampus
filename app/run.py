@@ -10,33 +10,29 @@ db = couchdb_server['course-report']
 def index():
     
     # Listado de todos los documentos almacenados
-    documents = [row.doc for row in db.view("_all_docs", include_docs=True)]
-    
+    documents = [row.doc for row in db.view("reports/all_reports", include_docs = True)]
     # Obtener valores unicos 
     documents_unique = list({document['courseID']:document for document in documents}.values())
     posts = []
 
     for document in documents_unique:
         posts.append({'courseID': document['courseID'],'courseName':document['courseName'],
-            'totalReports': len([row for row in db.find({'selector':{'courseID':document['courseID']}})])})
+            'totalReports': len([row for row in db.view("reports/number_reports",key=document['courseID'])])})
     
     # Ordenar primero por nombre del curso
     posts = sorted(posts, key=lambda post : post['courseName'])
-    '''
-    # Para realizar procedimiento de busqueda
-    if request.method == 'POST':
-        for document in documents_unique:
-            if request.form['courseName'].lower() == document['courseName'].lower():
-                posts = document 
-    '''
+    
     return render_template('index.html', posts = posts, coursesTotal = len(posts))
 
 @app.route('/report', methods=['GET','POST'])
 def report():
     
-    posts = [row for row in db.find({'selector':{'courseID':request.form['courseID']}})]
+    # Obtener el listado de valores que retorna la vista 'details'
+    posts = [eval(post) for post in [str(row.value).replace('[','').replace(']','') for row in \
+        db.view("reports/details", key=request.form['courseID'])]]
+
     
-    # Ordenar primero por hora y fecha
+    # Ordenar primero por hora y luego fecha
     posts = sorted(sorted(posts, key=lambda post : post['reportTime'], reverse = True), \
         key=lambda post : post['reportDate'], reverse = True)
 
@@ -49,7 +45,12 @@ def view_details(report_id):
     
     # obtener el contenido de un reporte
     report_detail = db.get(report_id)
-    
+    '''
+    report_detail = [eval(str(row.value).replace('[','').replace(']','')) \
+        for row in db.view("reports/status", key=report_id)]
+    '''
+    print(report_detail)
+
     return render_template('view_details.html', report = report_detail)
 
 if __name__ == '__main__':

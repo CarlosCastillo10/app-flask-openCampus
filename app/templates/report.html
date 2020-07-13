@@ -53,11 +53,11 @@
                         <tbody>
                             {% for report in reports %}
                                 <tr>
-                                    <td>{{ report.id }}</td>
+                                    <td>{{ report._id }}</td>
                                     <td>{{ report.reportDate }}</td>
                                     <td>{{ report.reportTime }}</td>
                                     <td>
-                                        <a href="/view_details/{{ report.id }}" class="btn btn-outline-info">
+                                        <a href="/view_details/{{ report._id }}" class="btn btn-outline-info">
                                             Detalles
                                         </a>
                                     </td>
