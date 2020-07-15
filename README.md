@@ -36,7 +36,7 @@
 			}
 		
 ## Ejecución
-* Clone el repositoio (```Edx-Course-Report```) en el mismo directorio donde se encuentra el curso descomprimido de edX.   
+* Clone el repositoio (```app-flask-openCampus```).   
 		 
 		 https://github.com/CarlosCastillo10/app-flask-openCampus.git
 * Ubiquese en el repositorio clonado.
